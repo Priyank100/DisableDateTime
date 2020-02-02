@@ -1,0 +1,80 @@
+private void showDatePicker(final TextView tv) {
+        if (mEventDatePickerDialog == null) {
+            if (newCalendar == null) {
+                newCalendar = Calendar.getInstance();
+            }
+            mEventDatePickerDialog = new DatePickerDialog(context, new DatePickerDialog.OnDateSetListener() {
+
+                public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+
+                    newDate = Calendar.getInstance();
+                    newDate.set(year, monthOfYear, dayOfMonth);
+                    newCalendar.set(Calendar.YEAR, year);
+                    newCalendar.set(Calendar.MONTH, monthOfYear);
+                    newCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                    showTimePicker(tv);
+                }
+            }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
+            mEventDatePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+            mEventDatePickerDialog.show();
+
+        } else if (mEventDatePickerDialog != null && !mEventDatePickerDialog.isShowing()) {
+            if (newCalendar == null) {
+                newCalendar = Calendar.getInstance();
+            }
+            mEventDatePickerDialog = new DatePickerDialog(context, new DatePickerDialog.OnDateSetListener() {
+
+                public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+
+                    newDate = Calendar.getInstance();
+                    newDate.set(year, monthOfYear, dayOfMonth);
+                    newCalendar.set(Calendar.YEAR, year);
+                    newCalendar.set(Calendar.MONTH, monthOfYear);
+                    newCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                    showTimePicker(tv);
+                }
+            }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
+            mEventDatePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+            mEventDatePickerDialog.show();
+        }
+    }
+
+    private void showTimePicker(final TextView tv) {
+
+        if (newCalendar == null) {
+            newCalendar = Calendar.getInstance();
+        }
+
+        mEventTimePickerDialog = new TimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                Calendar datetime = Calendar.getInstance();
+                Calendar c = Calendar.getInstance();
+                datetime.set(Calendar.MONTH, newCalendar.get(Calendar.MONTH));
+                datetime.set(Calendar.DAY_OF_MONTH, newCalendar.get(Calendar.DAY_OF_MONTH));
+                datetime.set(Calendar.YEAR, newCalendar.get(Calendar.YEAR));
+                datetime.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                datetime.set(Calendar.SECOND, 00);
+                datetime.set(Calendar.MINUTE, minute);
+                Date mSelectDate = new Date(datetime.getTimeInMillis());
+                Date mCurrentDate = new Date(c.getTimeInMillis());
+
+                if (mSelectDate.after(mCurrentDate)) {
+                    newDate.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                    newDate.set(Calendar.MINUTE, minute);
+                    newDate.set(Calendar.SECOND, 00);
+                    newCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                    newCalendar.set(Calendar.MINUTE, minute);
+                    newCalendar.set(Calendar.SECOND, 00);
+                    tv.setText(new SimpleDateFormat("dd/MM/yyyy hh:mm a").format(newDate.getTime()).toString());
+
+                } else {
+                    ConstantAll.customToast(context, "Select valid time");
+                    tv.setText("");
+                    return;
+                }
+            }
+        }, newCalendar.get(Calendar.HOUR_OF_DAY), newCalendar.get(Calendar.MINUTE), false);
+
+        mEventTimePickerDialog.show();
+    }
